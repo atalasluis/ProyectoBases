@@ -1,5 +1,5 @@
                         PARTES A REPARTIR
---------------> PARTE 1
+--------------> PARTE 1 luis, mauricio
 1. Crear producto
     - Formulario con campos: nombre, descripción, precio, stock, categoría, imagen.
 5. Manejo de imágenes
@@ -7,20 +7,20 @@
     Opción B: Carga de archivo en static/uploads/.
     Debe usarse una imagen por defecto si falta.
 
---------------> PARTE 2
+--------------> PARTE 2 juan
 2. Listar productos
     - Mostrar productos en tabla o tarjetas.
     - Incluir nombre, precio, stock, categoría e imagen.
 
---------------> PARTE 3
+--------------> PARTE 3 jesus
 3. Actualizar producto
     - Permitir editar todos los campos.
 
---------------> PARTE 4
+--------------> PARTE 4 patty
 4. Eliminar producto
     - Mostrar pantalla de confirmación previa.
 
---------------> PARTE 5
+--------------> PARTE 5 paolo
 6. Filtros y búsqueda
     * Filtro por categoría
     * Búsqueda por nombre
