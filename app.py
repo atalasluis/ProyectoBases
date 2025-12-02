@@ -13,6 +13,8 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
+
+
 #Method Post
 @app.route('/products', methods=['POST'])
 def addProduct():
@@ -55,7 +57,6 @@ def edit(product_name):
     else:
         return notFound()
 
-
 @app.errorhandler(404)
 def notFound(error=None):
     message ={
@@ -66,7 +67,19 @@ def notFound(error=None):
     response.status_code = 404
     return response
 
+# otras rutas de la aplicacion
+#----------------------------------
+@app.route('/listar')
+def listar():
+    products = db['products']
+    productsReceived = products.find()
+    return render_template('listar.html', products = productsReceived)
+
+@app.route('/filtrosbusqueda')
+def filtrosbusqueda():
+    return render_template('filtrosbusqueda.html')
 
 
+#-------------------------------
 if __name__ == '__main__':
     app.run(debug=True, port=4000)
