@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, Response, jsonify, redirect, url_for
 import database as dbase  
 from product import Product
+from crearProducto import crear_producto_bp
 
 db = dbase.dbConnection()
 
 app = Flask(__name__)
+
+# metodo post
+app.register_blueprint(crear_producto_bp)
 
 #Rutas de la aplicación
 @app.route('/')
@@ -13,31 +17,6 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
-
-
-#Method Post
-@app.route('/products', methods=['POST'])
-def addProduct():
-    products = db['products']
-    name = request.form['name']
-    description = request.form['description']
-    price = request.form['price']
-    stock = request.form['stock']
-    category = request.form['category']
-
-    if name and description and price and stock and category:
-        product = Product(name, description, price, stock, category)
-        products.insert_one(product.toDBCollection())
-        response = jsonify({
-            'name' : name,
-            'description' : description,
-            'price' : price,
-            'stock' : stock,
-            'category' : category
-        })
-        return redirect(url_for('home'))
-    else:
-        return notFound()
 
 #Method delete
 @app.route('/delete/<string:product_name>')
