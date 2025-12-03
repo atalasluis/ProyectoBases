@@ -120,7 +120,7 @@ def filtrosbusqueda():
         query['price'] = price_range
 
     # 6. Ejecutar la consulta con todos los filtros combinados
-    productsReceived = list(products.find(query))
+    productsReceived = products.find(query)
 
     # 7. Renderizar la plantilla, pasando los resultados
     return render_template('filtrosbusqueda.html', products = productsReceived)
