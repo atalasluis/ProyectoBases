@@ -10,7 +10,12 @@
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="category">Categoría:</label>
-                    <input type="text" class="form-control" id="category" name="category" value="{{ request.args.get('category', '') }}">
+                    <select class="form-control" id="category" name="category">
+                        <option value="">-- Todas las Categorías --</option>
+                        <option value="Juegos" {% if request.args.get('category') == 'Juegos' %}selected{% endif %}>Juegos</option>
+                        <option value="Consolas" {% if request.args.get('category') == 'Consolas' %}selected{% endif %}>Consolas</option>
+                        <option value="Accesorios" {% if request.args.get('category') == 'Accesorios' %}selected{% endif %}>Accesorios</option>
+                    </select>
                 </div>
 
                 <div class="col-md-4 mb-3">

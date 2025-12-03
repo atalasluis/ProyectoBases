@@ -121,10 +121,16 @@ def filtrosbusqueda():
 
     # 6. Ejecutar la consulta con todos los filtros combinados
     productsReceived = list(products.find(query))
+    
+    # OBTENER CATEGORIAS UNICAS
+    all_categories = products.distinct("category")
 
     # 7. Renderizar la plantilla, pasando los resultados
-    return render_template('filtrosbusqueda.html', products = productsReceived)
-
+    return render_template(
+    'filtrosbusqueda.html', 
+    products = productsReceived,
+    categories = all_categories #Nuevo parámetro
+    )
 
 #-------------------------------
 if __name__ == '__main__':
