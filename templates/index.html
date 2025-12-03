@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 class="text-center mt-4 mb-4">APP API-REST PYTHON - FLASK - MONGODB</h1>
+<h1 class="text-center mt-4 mb-4">Crear Producto</h1>
 
 <div class="row row-col-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
 
@@ -9,18 +9,24 @@
     <div class="col-md-6 mb-3">
         <div class="card">
             <div class="card-header text-center">
-                <h5>Alta producto</h5>
+                <h5>Alta Juego</h5>
             </div>
             <div class="card-body">
                 <form action="/products" method="POST">
                     <label>Nombre</label>
                     <input type="text" class="form-control mb-3" name="name">
 
+                    <label>descripcion</label>
+                    <input type="text" class="form-control mb-3" name="description">
+
                     <label>Precio</label>
                     <input type="text" class="form-control mb-3" name="price">
 
                     <label>Cantidad</label>
-                    <input type="text" class="form-control mb-3" name="quantity">
+                    <input type="text" class="form-control mb-3" name="stock">
+
+                    <label>Categoria</label>
+                    <input type="text" class="form-control mb-3" name="category">
 
                     <button class="btn btn-primary" type="submit">Guardar</button>
                 </form>
@@ -46,7 +52,7 @@
                                     <input type="text" class="form-control" value="{{ product.name }}" name="name">
 
                                     <small>Cantidad</small>
-                                    <input type="text" class="form-control" value="{{ product.quantity }}" name="quantity">
+                                    <input type="text" class="form-control" value="{{ product.stock }}" name="stock">
 
                                     <small>Precio</small>
                                     <input type="text" class="form-control" value="{{ product.price }}" name="price">

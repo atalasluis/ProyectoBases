@@ -20,16 +20,20 @@ def home():
 def addProduct():
     products = db['products']
     name = request.form['name']
+    description = request.form['description']
     price = request.form['price']
-    quantity = request.form['quantity']
+    stock = request.form['stock']
+    category = request.form['category']
 
-    if name and price and quantity:
-        product = Product(name, price, quantity)
+    if name and description and price and stock and category:
+        product = Product(name, description, price, stock, category)
         products.insert_one(product.toDBCollection())
         response = jsonify({
             'name' : name,
+            'description' : description,
             'price' : price,
-            'quantity' : quantity
+            'stock' : stock,
+            'category' : category
         })
         return redirect(url_for('home'))
     else:
@@ -47,11 +51,13 @@ def delete(product_name):
 def edit(product_name):
     products = db['products']
     name = request.form['name']
+    description = request.form['description']
     price = request.form['price']
-    quantity = request.form['quantity']
+    stock = request.form['stock']
+    category = request.form['category']
 
-    if name and price and quantity:
-        products.update_one({'name' : product_name}, {'$set' : {'name' : name, 'price' : price, 'quantity' : quantity}})
+    if name and description and price and stock and category:
+        products.update_one({'name' : product_name}, {'$set' : {'name' : name, 'description' : description, 'price' : price, 'stock' : stock,  'category' : category}})
         response = jsonify({'message' : 'Producto ' + product_name + ' actualizado correctamente'})
         return redirect(url_for('home'))
     else:
