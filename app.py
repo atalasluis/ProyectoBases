@@ -14,7 +14,7 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
-
+#prueba de commit
 
 #Method Post
 @app.route('/products', methods=['POST'])
