@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, Response, jsonify, redirect, 
 import database as dbase  
 from product import Product
 from crearProducto import crear_producto_bp
+import filters
 
 db = dbase.dbConnection()
 
@@ -62,7 +63,12 @@ def listar():
 
 @app.route('/filtrosbusqueda')
 def filtrosbusqueda():
-    return render_template('filtrosbusqueda.html')
+    products = db['products']
+    query = filters.build_filter_query() # Llama a la lógica corregida
+    all_categories = products.distinct("category")
+    productsReceived = list(products.find(query)) 
+    return render_template('filtrosbusqueda.html', products=productsReceived, categories=all_categories)
+
 
 
 #-------------------------------
