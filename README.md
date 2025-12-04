@@ -57,16 +57,28 @@ La búsqueda es dinámica y combina todos los filtros.
 ## 📂 Estructura del proyecto
 
 /project
+
 │── app.py
+
 │── database.py
+
 │── product.py
+
 │── filters.py
+
 │── requirements.txt
+
 │── /templates
+
 │ ├── base.html
+
 │ ├── crear.html
+
 │ ├── listar.html
+
 │ └── filtrosbusqueda.html
+
 │── /static
+
 │ └── uploads/ (imágenes de productos)
 
