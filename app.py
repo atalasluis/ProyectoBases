@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, Response, jsonify, redirect, url_for
 import database as dbase  
 from product import Product
-
+from crearProducto import crear_producto_bp
 import filters
+
 db = dbase.dbConnection()
 
 app = Flask(__name__)
+
+# metodo post
+app.register_blueprint(crear_producto_bp)
 
 #Rutas de la aplicación
 @app.route('/')
@@ -14,28 +18,6 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
-#prueba de commit
-
-#Method Post
-@app.route('/products', methods=['POST'])
-def addProduct():
-    products = db['products']
-    name = request.form['name']
-    description = request.form['description']
-    price = request.form['price']
-    stock = request.form['stock']
-    if name and description and price and stock and category:
-        try:
-            # CONVERSIÓN EN EL CÓDIGO: Aseguramos que Product reciba números
-            product = Product(name, description, float(price), int(stock), category)
-        except ValueError:
-            # Manejo de error si el usuario no ingresa un número válido
-            return jsonify({'message': 'Precio o stock debe ser un número válido'}), 400
-        
-        products.insert_one(product.toDBCollection())
-    category = request.form['category']
-
- 
 
 #Method delete
 @app.route('/delete/<string:product_name>')
@@ -52,21 +34,6 @@ def edit(product_name):
     description = request.form['description']
     price = request.form['price']
     stock = request.form['stock']
-    if name and description and price and stock and category:
-        try:
-            # CONVERSIÓN EN EL CÓDIGO: Aseguramos que el $set de MongoDB sea numérico
-            new_price = float(price)
-            new_stock = int(stock)
-        except ValueError:
-            return jsonify({'message': 'Precio o stock debe ser un número válido'}), 400
-            
-        products.update_one({'name' : product_name}, 
-                            {'$set' : {'name' : name, 
-                                        'description' : description, 
-                                        'price' : new_price, 
-                                        'stock' : new_stock, 
-                                        'category' : category}})
-   
     category = request.form['category']
 
     if name and description and price and stock and category:
@@ -101,6 +68,8 @@ def filtrosbusqueda():
     all_categories = products.distinct("category")
     productsReceived = list(products.find(query)) 
     return render_template('filtrosbusqueda.html', products=productsReceived, categories=all_categories)
+
+
 
 #-------------------------------
 if __name__ == '__main__':

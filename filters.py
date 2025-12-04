@@ -31,22 +31,30 @@ def build_filter_query():
     # Manejo de precio mínimo
     if min_price_str:
         try:
-            min_float = float(min_price_str)
-            price_range['$gte'] = min_float
+            price_range['$gte'] = float(min_price_str)
         except ValueError:
-            pass 
+            pass
     
     # Manejo de precio máximo
     if max_price_str:
         try:
-            max_float = float(max_price_str)
-            price_range['$lte'] = max_float
+            price_range['$lte'] = float(max_price_str)
         except ValueError:
-            pass 
+            pass
 
     # 5. Si hay condiciones de precio, se añaden a la query principal
     if price_range:
-        query['price'] = price_range
+        expr = []
+        if '$gte' in price_range:
+            expr.append({
+                '$gte': [ { '$toDouble': "$price" }, price_range['$gte'] ]
+            })
 
+        if '$lte' in price_range:
+            expr.append({
+                '$lte': [ { '$toDouble': "$price" }, price_range['$lte'] ]
+            })
+
+        query['$expr'] = expr[0] if len(expr) == 1 else { '$and': expr }
     # La query final puede ser {} si no hay filtros, o contener una combinación de ellos.
     return query
