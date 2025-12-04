@@ -39,6 +39,7 @@ def addProduct():
     else:
         return notFound()
 
+
 #Method delete
 @app.route('/delete/<string:product_name>')
 def delete(product_name):
@@ -47,21 +48,21 @@ def delete(product_name):
     return redirect(url_for('listar'))
 
 #Method Put
-@app.route('/edit/<string:product_name>', methods=['POST'])
-def edit(product_name):
-    products = db['products']
-    name = request.form['name']
-    description = request.form['description']
-    price = request.form['price']
-    stock = request.form['stock']
-    category = request.form['category']
+#@app.route('/edit/<string:product_name>', methods=['POST'])
+#def edit(product_name):
+#    products = db['products']
+#    name = request.form['name']
+#    description = request.form['description']
+#    price = request.form['price']
+#    stock = request.form['stock']
+#    category = request.form['category']
 
-    if name and description and price and stock and category:
-        products.update_one({'name' : product_name}, {'$set' : {'name' : name, 'description' : description, 'price' : price, 'stock' : stock,  'category' : category}})
-        response = jsonify({'message' : 'Producto ' + product_name + ' actualizado correctamente'})
-        return redirect(url_for('home'))
-    else:
-        return notFound()
+#    if name and description and price and stock and category:
+#        products.update_one({'name' : product_name}, {'$set' : {'name' : name, 'description' : description, 'price' : price, 'stock' : stock,  'category' : category}})
+#        response = jsonify({'message' : 'Producto ' + product_name + ' actualizado correctamente'})
+#        return redirect(url_for('home'))
+#    else:
+#        return notFound()
 
 @app.errorhandler(404)
 def notFound(error=None):
@@ -72,6 +73,41 @@ def notFound(error=None):
     response = jsonify(message)
     response.status_code = 404
     return response
+
+#editar algo xdd
+@app.route('/edit/<string:product_name>', methods=['GET', 'POST'])
+def edit(product_name):
+    products = db['products']
+
+    if request.method == 'POST':
+        # guardar cambios (POST)
+        name = request.form.get('name')
+        description = request.form.get('description')
+        price = request.form.get('price')
+        stock = request.form.get('stock')
+        category = request.form.get('category')
+
+        if name and description and price and stock and category:
+            products.update_one(
+                {'name': product_name},
+                {'$set': {
+                    'name': name,
+                    'description': description,
+                    'price': price,
+                    'stock': stock,
+                    'category': category
+                }}
+            )
+            return redirect(url_for('listar'))
+        else:
+            return notFound()
+    else:
+        # mostrar formulario (GET)
+        product = products.find_one({'name': product_name})
+        if not product:
+            return notFound()
+        return render_template('edit.html', product=product)
+
 
 # otras rutas de la aplicacion
 #----------------------------------
