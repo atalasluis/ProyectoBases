@@ -12,9 +12,12 @@
                     <label for="category">Categoría:</label>
                     <select class="form-control" id="category" name="category">
                         <option value="">-- Todas las Categorías --</option>
-                        <option value="Juegos" {% if request.args.get('category') == 'Juegos' %}selected{% endif %}>Juegos</option>
-                        <option value="Consolas" {% if request.args.get('category') == 'Consolas' %}selected{% endif %}>Consolas</option>
-                        <option value="Accesorios" {% if request.args.get('category') == 'Accesorios' %}selected{% endif %}>Accesorios</option>
+                        {% for cat in categories%}
+                        <option value="{{ cat }}"
+                        {% if request.args.get('category') == cat%}selected{% endif %}>
+                        {{cat}}
+                    </option>
+                    {% endfor %}
                     </select>
                 </div>
 

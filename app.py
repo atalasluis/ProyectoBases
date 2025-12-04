@@ -67,7 +67,11 @@ def filtrosbusqueda():
     query = filters.build_filter_query() # Llama a la lógica corregida
     all_categories = products.distinct("category")
     productsReceived = list(products.find(query)) 
-    return render_template('filtrosbusqueda.html', products=productsReceived, categories=all_categories)
+    return render_template(
+        'filtrosbusqueda.html',
+        products=productsReceived,
+        categories=all_categories
+        )
 
 
 
