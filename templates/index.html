@@ -1,76 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="container">
+    <h1 class="text-center mt-5 mb-5">Alta Producto</h1>
+    <div class="card">
+        <div class="card-body">
+            <form action="/products" method="POST">
+                <label>Nombre</label>
+                <input type="text" class="form-control mb-3" name="name">
 
-<h1 class="text-center mt-4 mb-4">Crear Producto</h1>
+                <label>Descripción</label>
+                <input type="text" class="form-control mb-3" name="description">
 
-<div class="row row-col-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2">
+                <label>Precio</label>
+                <input type="text" class="form-control mb-3" name="price">
 
-    <!-- Formulario crear producto -->
-    <div class="col-md-6 mb-3">
-        <div class="card">
-            <div class="card-header text-center">
-                <h5>Alta Juego</h5>
-            </div>
-            <div class="card-body">
-                <form action="/products" method="POST">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control mb-3" name="name">
+                <label>Cantidad</label>
+                <input type="text" class="form-control mb-3" name="stock">
 
-                    <label>descripcion</label>
-                    <input type="text" class="form-control mb-3" name="description">
+                <label>Categoría</label>
+                <input type="text" class="form-control mb-3" name="category">
 
-                    <label>Precio</label>
-                    <input type="text" class="form-control mb-3" name="price">
-
-                    <label>Cantidad</label>
-                    <input type="text" class="form-control mb-3" name="stock">
-
-                    <label>Categoria</label>
-                    <input type="text" class="form-control mb-3" name="category">
-
-                    <button class="btn btn-primary" type="submit">Guardar</button>
-                </form>
-            </div>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </form>
         </div>
     </div>
-
-    <!-- Listado productos -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header text-center">
-                <h5>Productos</h5>
-            </div>
-            <div class="card-body">
-
-                <ul class="list-group">
-                    <div class="row">
-                        {% for product in products %}
-                        <div class="col-md-6">
-                            <li class="list-group-item mb-3">
-                                <form action="/edit/{{ product.name }}" method="POST">
-
-                                    <input type="text" class="form-control" value="{{ product.name }}" name="name">
-
-                                    <small>Cantidad</small>
-                                    <input type="text" class="form-control" value="{{ product.stock }}" name="stock">
-
-                                    <small>Precio</small>
-                                    <input type="text" class="form-control" value="{{ product.price }}" name="price">
-
-                                    <button class="btn btn-primary btn-sm mt-3" type="submit">Editar</button>
-                                    <a href="{{ url_for('delete', product_name=product.name) }}" class="btn btn-danger btn-sm mt-3">Eliminar</a>
-
-                                </form>
-                            </li>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </ul>
-
-            </div>
-        </div>
-    </div>
-
 </div>
-
 {% endblock %}

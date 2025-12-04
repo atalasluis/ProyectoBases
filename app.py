@@ -44,7 +44,7 @@ def addProduct():
 def delete(product_name):
     products = db['products']
     products.delete_one({'name' : product_name})
-    return redirect(url_for('home'))
+    return redirect(url_for('listar'))
 
 #Method Put
 @app.route('/edit/<string:product_name>', methods=['POST'])
