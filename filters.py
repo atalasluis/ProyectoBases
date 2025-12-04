@@ -1,50 +1,52 @@
+# filters.py
 from flask import request
-import re
 
 def build_filter_query():
-    """Construye el diccionario de consulta de MongoDB a partir de los parámetros de la URL."""
+    """
+    Construye el diccionario de consulta de MongoDB a partir de los 
+    parámetros de la URL.
+    """
     
-    # 1. Obtenemos los parámetros de búsqueda de la URL (request.args)
+    # 1. Obtenemos los parámetros
     category = request.args.get('category')
     name_search = request.args.get('name')
-    min_price = request.args.get('min_price')
-    max_price = request.args.get('max_price')
+    min_price_str = request.args.get('min_price')
+    max_price_str = request.args.get('max_price')
 
     query = {}
 
-    # 2. Aplicar Filtro por Categoría (Revisa tu HTML para ver si usas el campo 'category')
+    # 2. Aplicar Filtro por Categoría
+    # Si la categoría no es None Y no es una cadena vacía (el valor de '-- Todas las Categorías --' es "")
     if category: 
-        # Búsqueda insensible a mayúsculas/minúsculas y que coincida exactamente
         query['category'] = category
 
-    # 3. Aplicar Búsqueda por Nombre (Utilizando regex para buscar el nombre parcial)
+    # 3. Aplicar Búsqueda por Nombre (utilizando $regex)
     if name_search:
         # La 'i' hace la búsqueda insensible a mayúsculas/minúsculas
         query['name'] = {'$regex': name_search, '$options': 'i'}
 
-    # 4. Aplicar Filtro por Rango de Precio (CORRECCIÓN CRÍTICA)
+    # 4. Aplicar Filtro por Rango de Precio
     price_range = {}
     
     # Manejo de precio mínimo
-    if min_price:
+    if min_price_str:
         try:
-            min_float = float(min_price)
-            if min_float >= 0:
-                price_range['$gte'] = min_float
+            min_float = float(min_price_str)
+            price_range['$gte'] = min_float
         except ValueError:
-            pass # Ignorar si no es un número válido
+            pass 
     
     # Manejo de precio máximo
-    if max_price:
+    if max_price_str:
         try:
-            max_float = float(max_price)
-            if max_float >= 0:
-                price_range['$lte'] = max_float
+            max_float = float(max_price_str)
+            price_range['$lte'] = max_float
         except ValueError:
-            pass # Ignorar si no es un número válido
+            pass 
 
-    # Si hay condiciones de precio, se añaden a la query principal
+    # 5. Si hay condiciones de precio, se añaden a la query principal
     if price_range:
         query['price'] = price_range
 
+    # La query final puede ser {} si no hay filtros, o contener una combinación de ellos.
     return query

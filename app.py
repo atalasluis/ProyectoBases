@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, Response, jsonify, redirect, 
 import database as dbase  
 from product import Product
 
+import filters
 db = dbase.dbConnection()
 
 app = Flask(__name__)
@@ -23,21 +24,18 @@ def addProduct():
     description = request.form['description']
     price = request.form['price']
     stock = request.form['stock']
+    if name and description and price and stock and category:
+        try:
+            # CONVERSIÓN EN EL CÓDIGO: Aseguramos que Product reciba números
+            product = Product(name, description, float(price), int(stock), category)
+        except ValueError:
+            # Manejo de error si el usuario no ingresa un número válido
+            return jsonify({'message': 'Precio o stock debe ser un número válido'}), 400
+        
+        products.insert_one(product.toDBCollection())
     category = request.form['category']
 
-    if name and description and price and stock and category:
-        product = Product(name, description, price, stock, category)
-        products.insert_one(product.toDBCollection())
-        response = jsonify({
-            'name' : name,
-            'description' : description,
-            'price' : price,
-            'stock' : stock,
-            'category' : category
-        })
-        return redirect(url_for('home'))
-    else:
-        return notFound()
+ 
 
 #Method delete
 @app.route('/delete/<string:product_name>')
@@ -54,6 +52,21 @@ def edit(product_name):
     description = request.form['description']
     price = request.form['price']
     stock = request.form['stock']
+    if name and description and price and stock and category:
+        try:
+            # CONVERSIÓN EN EL CÓDIGO: Aseguramos que el $set de MongoDB sea numérico
+            new_price = float(price)
+            new_stock = int(stock)
+        except ValueError:
+            return jsonify({'message': 'Precio o stock debe ser un número válido'}), 400
+            
+        products.update_one({'name' : product_name}, 
+                            {'$set' : {'name' : name, 
+                                        'description' : description, 
+                                        'price' : new_price, 
+                                        'stock' : new_stock, 
+                                        'category' : category}})
+   
     category = request.form['category']
 
     if name and description and price and stock and category:
@@ -84,53 +97,10 @@ def listar():
 @app.route('/filtrosbusqueda')
 def filtrosbusqueda():
     products = db['products']
-    # 1. Obtenemos los parámetros de búsqueda de la URL (request.args)
-    category = request.args.get('category')
-    name_search = request.args.get('name')
-    min_price = request.args.get('min_price')
-    max_price = request.args.get('max_price')
-
-    # 2. Inicializamos el diccionario de la query de MongoDB
-    query = {}
-
-    # 3. Aplicar Filtro por Categoría
-    if category:
-        # Usa $regex para una coincidencia flexible (opcional, podrías usar category.lower() si quieres coincidencia exacta)
-        # La 'i' hace que la búsqueda sea insensible a mayúsculas/minúsculas
-        query['category'] = {'$regex': category, '$options': 'i'}
-
-    # 4. Aplicar Búsqueda por Nombre
-    if name_search:
-        # Busca el nombre en cualquier parte del campo 'name'
-        query['name'] = {'$regex': name_search, '$options': 'i'}
-
-    # 5. Aplicar Filtro por Rango de Precio
-    price_range = {}
-    
-    if min_price and min_price.replace('.', '', 1).isdigit():
-        # Convierte a float y usa el operador $gte (mayor o igual que)
-        price_range['$gte'] = float(min_price)
-    
-    if max_price and max_price.replace('.', '', 1).isdigit():
-        # Convierte a float y usa el operador $lte (menor o igual que)
-        price_range['$lte'] = float(max_price)
-
-    # Si se definió un rango de precio (min o max), lo agregamos a la query
-    if price_range:
-        query['price'] = price_range
-
-    # 6. Ejecutar la consulta con todos los filtros combinados
-    productsReceived = list(products.find(query))
-    
-    # OBTENER CATEGORIAS UNICAS
+    query = filters.build_filter_query() # Llama a la lógica corregida
     all_categories = products.distinct("category")
-
-    # 7. Renderizar la plantilla, pasando los resultados
-    return render_template(
-    'filtrosbusqueda.html', 
-    products = productsReceived,
-    categories = all_categories #Nuevo parámetro
-    )
+    productsReceived = list(products.find(query)) 
+    return render_template('filtrosbusqueda.html', products=productsReceived, categories=all_categories)
 
 #-------------------------------
 if __name__ == '__main__':
