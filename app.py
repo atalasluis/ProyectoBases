@@ -3,11 +3,14 @@ import database as dbase
 from product import Product
 from crearProducto import crear_producto_bp
 import filters
+
 import os
+
 
 db = dbase.dbConnection()
 
 app = Flask(__name__)
+
 #Creacion de imagen folder si no existe
 UPLOAD_FOLDER2 = 'static/images/products'
 ALLOWED_EXTENSIONS2 = {'png', 'jpg', 'jpeg', 'gif'}
@@ -19,6 +22,8 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # 16 MB
 #asegurar que la carpeta de imagenes exista
 if not os.path.exists(UPLOAD_FOLDER2):
     os.makedirs(UPLOAD_FOLDER2)
+
+
 
 # metodo post
 app.register_blueprint(crear_producto_bp)
