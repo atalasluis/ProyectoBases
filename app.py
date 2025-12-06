@@ -12,7 +12,7 @@ db = dbase.dbConnection()
 app = Flask(__name__)
 
 #Creacion de imagen folder si no existe
-UPLOAD_FOLDER2 = 'static/images/products'
+UPLOAD_FOLDER2 = 'static/uploads'
 ALLOWED_EXTENSIONS2 = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
