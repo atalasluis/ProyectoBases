@@ -14,5 +14,5 @@ class Product:
             'price': self.price,
             'stock': self.stock,
             'category': self.category,
-            'image_url': self.image
+            'image': self.image
         }
