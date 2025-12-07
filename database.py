@@ -9,4 +9,4 @@ def dbConnection():
         return db
     except Exception as e:
         print("Error de conexión con la bdd:", e)
-        return None   
+        return None

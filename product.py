@@ -1,11 +1,11 @@
 class Product:
-    def __init__(self, name, description, price, stock, category, image_url=''): 
+    def __init__(self, name, description, price, stock, category, image=''): 
         self.name = name
         self.description = description
         self.price = price
         self.stock = stock
         self.category = category
-        self.image_url = image_url
+        self.image = image
 
     def toDBCollection(self):
         return{
@@ -14,5 +14,5 @@ class Product:
             'price': self.price,
             'stock': self.stock,
             'category': self.category,
-            'image_url': self.image_url 
+            'image_url': self.image
         }
