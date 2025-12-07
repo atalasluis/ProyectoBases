@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, Response, jsonify, redirect, 
 import database as dbase  
 from product import Product
 from crearProducto import crear_producto_bp
+from editarProducto import editar_producto_bp
+from eliminarProducto import eliminar_producto_bp
 import filters
-
 import os
 
 
@@ -27,6 +28,8 @@ if not os.path.exists(UPLOAD_FOLDER2):
 
 # metodo post
 app.register_blueprint(crear_producto_bp)
+app.register_blueprint(editar_producto_bp, url_prefix='/productos')
+app.register_blueprint(eliminar_producto_bp, url_prefix='/productos')
 
 #Rutas de la aplicación
 @app.route('/')
@@ -35,40 +38,6 @@ def home():
     productsReceived = products.find()
     return render_template('index.html', products = productsReceived)
 
-
-#Method delete
-@app.route('/delete/<string:product_name>')
-def delete(product_name):
-    products = db['products']
-    products.delete_one({'name' : product_name})
-    return redirect(url_for('home'))
-
-#Method Put
-@app.route('/edit/<string:product_name>', methods=['POST'])
-def edit(product_name):
-    products = db['products']
-    name = request.form['name']
-    description = request.form['description']
-    price = request.form['price']
-    stock = request.form['stock']
-    category = request.form['category']
-
-    if name and description and price and stock and category:
-        products.update_one({'name' : product_name}, {'$set' : {'name' : name, 'description' : description, 'price' : price, 'stock' : stock,  'category' : category}})
-        response = jsonify({'message' : 'Producto ' + product_name + ' actualizado correctamente'})
-        return redirect(url_for('home'))
-    else:
-        return notFound()
-
-@app.errorhandler(404)
-def notFound(error=None):
-    message ={
-        'message': 'No encontrado ' + request.url,
-        'status': '404 Not Found'
-    }
-    response = jsonify(message)
-    response.status_code = 404
-    return response
 
 # otras rutas de la aplicacion
 #----------------------------------
