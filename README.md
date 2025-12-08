@@ -82,3 +82,9 @@ La búsqueda es dinámica y combina todos los filtros.
 
 │ └── uploads/ (imágenes de productos)
 
+---
+# Video   
+El siguiente enlace es de un video mostrarndo como funciona esta aplicacion.
+https://drive.google.com/file/d/1cLE2wNQ5weNgaHEPUILmIkCdbvIqmP_6/view?usp=sharing
+
+---
