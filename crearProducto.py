@@ -28,8 +28,12 @@ def addProduct():
     try:
         price = float(price) if price else 0.0
         stock = int(stock) if stock else 0
+        offer = float(offer) if offer else 0.0   # 👈 ahora oferta es número
     except ValueError:
-        return jsonify({'message': 'Precio o stock inválido'}), 400
+        return jsonify({'message': 'Precio, stock u oferta inválidos'}), 400
+
+    # Calcular precio final
+    final_price = price - offer if offer else price
 
     image = ''
     
@@ -48,11 +52,11 @@ def addProduct():
             image = filename
 
     # Validación de datos
-    if name and description and price and stock and category and offer:
+    if name and description and price and stock and category:
         product = Product(
             name=name,
             description=description,
-            price=price,
+            price=final_price,   # 👈 guardamos el precio ya con descuento
             stock=stock,
             category=category,
             offer=offer,
