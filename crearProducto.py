@@ -15,11 +15,21 @@ def allowed_file(filename):
 @crear_producto_bp.route('/products', methods=['POST'])
 def addProduct():
     products = db['products']
-    name = request.form['name']
-    description = request.form['description']
-    price = request.form['price']
-    stock = request.form['stock']
-    category = request.form['category']
+
+    # Captura de datos del formulario
+    name = request.form.get('name')
+    description = request.form.get('description')
+    price = request.form.get('price')
+    stock = request.form.get('stock')
+    category = request.form.get('category')
+    offer = request.form.get('offer')
+
+    # Conversión de tipos (si vienen como string)
+    try:
+        price = float(price) if price else 0.0
+        stock = int(stock) if stock else 0
+    except ValueError:
+        return jsonify({'message': 'Precio o stock inválido'}), 400
 
     image = ''
     
@@ -28,18 +38,26 @@ def addProduct():
         file = request.files['image']
         
         if file.filename != '' and allowed_file(file.filename):
-            
             filename = secure_filename(file.filename)
             
-            # guardar la imagen físicamente
+            # Guardar la imagen físicamente
             save_path = os.path.join(current_app.config['UPLOAD_FOLDER2'], filename)
             file.save(save_path)
             
-            # guardar SOLO el nombre de la imagen en la base de datos
+            # Guardar SOLO el nombre de la imagen en la base de datos
             image = filename
 
-    if name and description and price and stock and category:
-        product = Product(name, description, price, stock, category, image)
+    # Validación de datos
+    if name and description and price and stock and category and offer:
+        product = Product(
+            name=name,
+            description=description,
+            price=price,
+            stock=stock,
+            category=category,
+            offer=offer,
+            image=image
+        )
         products.insert_one(product.toDBCollection())
 
         return redirect(url_for('home'))
